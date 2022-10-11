@@ -6,7 +6,7 @@ A solution to install and run [code-server](https://github.com/coder/code-server
 
 ## Highlights
 
-This solution works for both [Amazon SageMaker Studio](https://docs.aws.amazon.com/sagemaker/latest/dg/studio.html) and [Amazon SageMaker Notebook Instances](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) configured to run with both JupyterLab 3 (recommended) and JupyterLab 1.
+This solution works for both [Amazon SageMaker Studio](https://docs.aws.amazon.com/sagemaker/latest/dg/studio.html) and [Amazon SageMaker Notebook Instances](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) configured to run with both JupyterLab 3 (recommended) and JupyterLab 1. For additional information on compatibility, please check the [compatiblity matrix](#compatibility).
 
 ### Features - Amazon SageMaker Studio
 
@@ -169,6 +169,11 @@ The install scripts define the following variables that can be modified to custo
 ### Amazon SageMaker Notebook Instances
 
 ![Notebook Instances Architecture](./images/architecture-nbi.png)
+
+<a name="compatibility"></a>
+## Compatibility
+
+![Compatibility matrix](./images/compatibility.png)
 
 ## Known limitations
 

@@ -90,10 +90,9 @@ jupyter lab build --debug --minimize=False
 
 conda deactivate
 
-sudo systemctl restart jupyter-server
 JL1EXT
-        sudo chmod +x $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-        $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
+        chmod +x $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
+        sh $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
     fi
 else
     source /home/ec2-user/anaconda3/bin/activate JupyterSystemEnv
@@ -109,7 +108,4 @@ else
 fi
 EOF
 
-if [[ $JUPYTER_LAB_VERSION != 1* ]] || [ $INSTALL_LAB1_EXTENSION -eq 0 ]
-then
-    systemctl restart jupyter-server
-fi
+systemctl restart jupyter-server
