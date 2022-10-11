@@ -12,6 +12,8 @@ CODE_SERVER_VERSION="4.5.2"
 CODE_SERVER_INSTALL_LOC="/home/ec2-user/SageMaker/.cs"
 XDG_DATA_HOME="/home/ec2-user/SageMaker/.xdg/data"
 XDG_CONFIG_HOME="/home/ec2-user/SageMaker/.xdg/config"
+CREATE_NEW_CONDA_ENV=1
+CONDA_ENV_LOCATION='/home/ec2-user/SageMaker/.cs/conda/envs/codeserver_py39'
 USE_CUSTOM_EXTENSION_GALLERY=0
 EXTENSION_GALLERY_CONFIG='{{\"serviceUrl\":\"\",\"cacheUrl\":\"\",\"itemUrl\":\"\",\"controlUrl\":\"\",\"recommendationsUrl\":\"\"}}'
 
@@ -66,6 +68,12 @@ fi
 JUPYTER_LAB_VERSION=$(/home/ec2-user/anaconda3/envs/JupyterSystemEnv/bin/jupyter-lab --version)
 
 sudo -u ec2-user -i <<EOF
+
+if [ $CREATE_NEW_CONDA_ENV -eq 1 ]
+then
+    conda config --add envs_dirs "${CONDA_ENV_LOCATION%/*}"
+fi
+
 if [[ $JUPYTER_LAB_VERSION == 1* ]]
 then
     source /home/ec2-user/anaconda3/bin/activate JupyterSystemEnv

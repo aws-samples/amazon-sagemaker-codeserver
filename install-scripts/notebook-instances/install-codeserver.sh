@@ -43,12 +43,6 @@ ln -s ${CODE_SERVER_INSTALL_LOC}/lib/code-server-$CODE_SERVER_VERSION/bin/code-s
 if [ $CREATE_NEW_CONDA_ENV -eq 1 ]
 then
     conda create --prefix $CONDA_ENV_LOCATION python=$CONDA_ENV_PYTHON_VERSION -y
-
-    mkdir -p $XDG_CONFIG_HOME/conda
-    cat > $XDG_CONFIG_HOME/conda/.condarc <<- EOCFG
-envs_dirs:
-    - /home/ec2-user/SageMaker/.cs/conda/envs
-EOCFG
 fi
 
 # install ms-python extension

@@ -51,7 +51,7 @@ ln -sf ${CODE_SERVER_INSTALL_LOC}/lib/code-server-$CODE_SERVER_VERSION/bin/code-
 if [ $CREATE_NEW_CONDA_ENV -eq 1 ]
 then
     conda create --prefix $CONDA_ENV_LOCATION python=$CONDA_ENV_PYTHON_VERSION -y
-    conda config --add envs_dirs "$CONDA_ENV_LOCATION"
+    conda config --add envs_dirs "${CONDA_ENV_LOCATION%/*}"
 fi
 
 # install ms-python extension
