@@ -49,7 +49,9 @@ There are two ways to get started and install the solution in Amazon SageMaker:
 
 In both cases we are going to leverage on the following install scripts:
 - SageMaker Studio: [install-codeserver](install-scripts/studio/install-codeserver.sh)
-- SageMaker Notebook Instances: [install-codeserver](install-scripts/notebook-instances/install-codeserver.sh) and [setup-codeserver](install-scripts/notebook-instances/setup-codeserver.sh) (install procedure is split in two sequential steps to better support lifecycle configurations - see next sections)
+- SageMaker Notebook Instances: [install-codeserver](install-scripts/notebook-instances/install-codeserver.sh) and [setup-codeserver](install-scripts/notebook-instances/setup-codeserver.sh) (install procedure is split in two sequential steps to better support lifecycle configurations - see next sections).
+
+The install procedure is based on the latest stable release of the solution as of today.
 
 ### Install with Lifecycle Configurations
 
@@ -59,32 +61,35 @@ When using Amazon SageMaker Studio, code-server must be installed on the instanc
 
 **Example: install code-server automatically for all users in the Studio domain**
 
-1. Download the [install-codeserver](install-scripts/studio/install-codeserver.sh) script in a directory of choice.
+From a terminal appropriately configured with AWS CLI, run the following commands:
+	
+    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
+	tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
 
-2. From a terminal appropriately configured with AWS CLI, run the following commands in the directory above:
-   
-        LCC_CONTENT=`openssl base64 -A -in install-codeserver.sh`
+    cd amazon-sagemaker-codeserver/install-scripts/studio
 
-        aws sagemaker create-studio-lifecycle-config \
-            --studio-lifecycle-config-name install-codeserver-on-jupyterserver \
-            --studio-lifecycle-config-content $LCC_CONTENT \
-            --studio-lifecycle-config-app-type JupyterServer \
-            --query 'StudioLifecycleConfigArn'
+    LCC_CONTENT=`openssl base64 -A -in install-codeserver.sh`
 
-        aws sagemaker update-domain \
-            --region <your_region> \
-            --domain-id <your_domain_id> \
-            --default-user-settings \
-            '{
-            "JupyterServerAppSettings": {
-            "DefaultResourceSpec": {
-            "LifecycleConfigArn": "arn:aws:sagemaker:<your_region>:<your_account_id>:studio-lifecycle-config/install-codeserver-on-jupyterserver",
-            "InstanceType": "system"
-            },
-            "LifecycleConfigArns": [
-            "arn:aws:sagemaker:<your_region>:<your_account_id>:studio-lifecycle-config/install-codeserver-on-jupyterserver"
-            ]
-            }}'
+    aws sagemaker create-studio-lifecycle-config \
+        --studio-lifecycle-config-name install-codeserver-on-jupyterserver \
+        --studio-lifecycle-config-content $LCC_CONTENT \
+        --studio-lifecycle-config-app-type JupyterServer \
+        --query 'StudioLifecycleConfigArn'
+
+    aws sagemaker update-domain \
+        --region <your_region> \
+        --domain-id <your_domain_id> \
+        --default-user-settings \
+        '{
+        "JupyterServerAppSettings": {
+        "DefaultResourceSpec": {
+        "LifecycleConfigArn": "arn:aws:sagemaker:<your_region>:<your_account_id>:studio-lifecycle-config/install-codeserver-on-jupyterserver",
+        "InstanceType": "system"
+        },
+        "LifecycleConfigArns": [
+        "arn:aws:sagemaker:<your_region>:<your_account_id>:studio-lifecycle-config/install-codeserver-on-jupyterserver"
+        ]
+        }}'
 
 Make sure to replace <your_domain_id>, <your_region> and <your_account_id> in the previous commands with the Studio domain ID, the AWS region and AWS Account ID you are using respectively.
 
@@ -94,20 +99,23 @@ Amazon SageMaker Notebook Instances support lifecycle configuration scripts that
 
 **Example: Create a notebook instance and install code-server automatically**
 
-1. Download the [install-codeserver](install-scripts/notebook-instances/install-codeserver.sh) and [setup-codeserver](install-scripts/notebook-instances/setup-codeserver.sh) scripts in a directory of choice.
+From a terminal appropriately configured with AWS CLI, run the following commands:
 
-2. From a terminal appropriately configured with AWS CLI, run the following commands in the directory above:
+    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
+	tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
 
-        aws sagemaker create-notebook-instance-lifecycle-config \
-            --notebook-instance-lifecycle-config-name install-codeserver \
-            --on-start Content=$((cat setup-codeserver.sh || echo "")| base64) \
-            --on-create Content=$((cat install-codeserver.sh || echo "")| base64)
+    cd amazon-sagemaker-codeserver/install-scripts/notebook-instances
 
-        aws sagemaker create-notebook-instance \
-            --notebook-instance-name <your_notebook_instance_name> \
-            --instance-type <your_instance_type> \
-            --role-arn <your_role_arn> \
-            --lifecycle-config-name install-codeserver
+    aws sagemaker create-notebook-instance-lifecycle-config \
+        --notebook-instance-lifecycle-config-name install-codeserver \
+        --on-start Content=$((cat setup-codeserver.sh || echo "")| base64) \
+        --on-create Content=$((cat install-codeserver.sh || echo "")| base64)
+
+    aws sagemaker create-notebook-instance \
+        --notebook-instance-name <your_notebook_instance_name> \
+        --instance-type <your_instance_type> \
+        --role-arn <your_role_arn> \
+        --lifecycle-config-name install-codeserver
 
 Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <your_role_arn> in the previous commands with the appropriate values.
 
@@ -115,28 +123,37 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
 
 #### Amazon SageMaker Studio
 
-1. Open the SageMaker Studio system terminal
-2. Download the [install-codeserver](install-scripts/studio/install-codeserver.sh) script in a directory of choice
-3. From the same download directory, run the following commands:
-    
+1. Open the Amazon SageMaker Studio system terminal
+2. From the terminal, run the following commands:
+
+        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
+		tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+
+        cd amazon-sagemaker-codeserver/install-scripts/studio
+        
         chmod +x install-codeserver.sh
         ./install-codeserver.sh
 
         # Note: when installing on JL1, please prepend the nohup command to the install command above and run as follows: 
         # nohup ./install-codeserver.sh
-        
+
 
 #### Amazon SageMaker Notebook Instances
 
 1. Access JupyterLab and open a terminal
-2. Download the [install-codeserver](install-scripts/notebook-instances/install-codeserver.sh) and [setup-codeserver](install-scripts/notebook-instances/setup-codeserver.sh) scripts in a directory of choice
-3. From the same download directory, run the following commands:
+2. From the terminal run the following commands:
 
+        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
+        tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+
+        cd amazon-sagemaker-codeserver/install-scripts/notebook-instances
+        
         chmod +x install-codeserver.sh
         chmod +x setup-codeserver.sh
         sudo ./install-codeserver.sh
         sudo ./setup-codeserver.sh
-4. \[Optional\] - After a stop/restart operation, run the following command to re-configure code-server:
+
+3. \[Optional\] - After a stop/restart operation, run the following command to re-configure code-server:
 
         sudo ./setup-codeserver.sh
 
