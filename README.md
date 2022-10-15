@@ -137,6 +137,8 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
         # Note: when installing on JL1, please prepend the nohup command to the install command above and run as follows: 
         # nohup ./install-codeserver.sh
 
+3. After the execution of the commands completes, reload the browser window and the code-server launcher button will appear in Studio as shown in the screenshots above.
+
 
 #### Amazon SageMaker Notebook Instances
 
@@ -153,9 +155,11 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
         sudo ./install-codeserver.sh
         sudo ./setup-codeserver.sh
 
-3. \[Optional\] - After a stop/restart operation, run the following command to re-configure code-server:
+3. After the execution of the commands completes, reload the browser window and the code-server launcher button will appear as shown in the screenshots above.
 
-        sudo ./setup-codeserver.sh
+**Note:** code-server and extensions installations are persistent on the notebook instance. However, if you stop or restart the instance, you need to run the following command to reconfigure code-server
+
+    sudo ./setup-codeserver.sh
 
 ## Advanced configuration
 The install scripts define the following variables that can be modified to customize the install procedure.
