@@ -135,6 +135,7 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
         ./install-codeserver.sh
 
         # Note: when installing on JL1, please prepend the nohup command to the install command above and run as follows: 
+	# export AWS_SAGEMAKER_JUPYTERSERVER_IMAGE=jupyter-server
         # nohup ./install-codeserver.sh
 
 3. After the execution of the commands completes, reload the browser window and the code-server launcher button will appear in Studio as shown in the screenshots above.
