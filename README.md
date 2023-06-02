@@ -108,8 +108,8 @@ From a terminal appropriately configured with AWS CLI, run the following command
 
     aws sagemaker create-notebook-instance-lifecycle-config \
         --notebook-instance-lifecycle-config-name install-codeserver \
-        --on-start Content=$((cat setup-codeserver.sh || echo "")| base64) \
-        --on-create Content=$((cat install-codeserver.sh || echo "")| base64)
+        --on-start Content="$((cat setup-codeserver.sh || echo "")| base64)" \
+        --on-create Content="$((cat install-codeserver.sh || echo "")| base64)"
 
     aws sagemaker create-notebook-instance \
         --notebook-instance-name <your_notebook_instance_name> \
