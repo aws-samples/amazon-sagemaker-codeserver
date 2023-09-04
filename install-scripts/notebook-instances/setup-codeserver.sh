@@ -20,8 +20,6 @@ EXTENSION_GALLERY_CONFIG='{{\"serviceUrl\":\"\",\"cacheUrl\":\"\",\"itemUrl\":\"
 LAUNCHER_ENTRY_TITLE='Code Server'
 PROXY_PATH='codeserver'
 LAB_3_EXTENSION_DOWNLOAD_URL='https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/sagemaker-jproxy-launcher-ext-0.1.3.tar.gz'
-INSTALL_LAB1_EXTENSION=1
-LAB_1_EXTENSION_DOWNLOAD_URL='https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amzn-sagemaker-jproxy-launcher-ext-jl1-0.1.4.tgz'
 
 #############
 #  INSTALL  #
@@ -77,31 +75,11 @@ fi
 if [[ $JUPYTER_LAB_VERSION == 1* ]]
 then
     source /home/ec2-user/anaconda3/bin/activate JupyterSystemEnv
-    pip install jupyter-server-proxy
+    echo "Installing jupyter-server-proxy."
+    pip install jupyter-server-proxy==1.6.0
     conda deactivate
 
-    if [ $INSTALL_LAB1_EXTENSION -eq 1 ]
-    then
-        rm -f $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-        cat >>$CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh <<- JL1EXT
-sleep 15
-
-source /home/ec2-user/anaconda3/bin/activate JupyterSystemEnv
-
-mkdir -p $CODE_SERVER_INSTALL_LOC/lab_ext
-curl -L $LAB_1_EXTENSION_DOWNLOAD_URL > $CODE_SERVER_INSTALL_LOC/lab_ext/amzn-sagemaker-jproxy-launcher-ext-jl1.tgz
-
-cd $CODE_SERVER_INSTALL_LOC/lab_ext
-jupyter labextension install amzn-sagemaker-jproxy-launcher-ext-jl1.tgz --no-build
-jlpm config set cache-folder /tmp/yarncache
-jupyter lab build --debug --minimize=False
-
-conda deactivate
-
-JL1EXT
-        chmod +x $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-        sh $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-    fi
+    echo "JupyterLab extension for JupyterLab 1 is not supported. You can still access code-server by typing the code-server URL in the browser address bar."
 else
     source /home/ec2-user/anaconda3/bin/activate JupyterSystemEnv
 
@@ -116,4 +94,9 @@ else
 fi
 EOF
 
-sudo systemctl restart jupyter-server
+if [[ -f /home/ec2-user/bin/dockerd-rootless.sh ]]; then
+	echo "Running in rootless mode; please restart Jupyter Server from the 'File' > 'Shut Down' menu and re-open Jupyter/JupyterLab."
+else
+	echo "Root mode. Restarting Jupyter Server..."
+    sudo systemctl restart jupyter-server
+fi

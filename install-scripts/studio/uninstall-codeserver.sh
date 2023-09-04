@@ -15,8 +15,6 @@ CONDA_ENV_LOCATION='/opt/.cs/conda/envs/codeserver_py39'
 
 PROXY_PATH='codeserver'
 LAB_3_EXTENSION_NAME='sagemaker-jproxy-launcher-ext'
-INSTALL_LAB1_EXTENSION=1
-LAB_1_EXTENSION_NAME='@amzn/sagemaker-jproxy-launcher-ext-jl1'
 
 ###############
 #  UNINSTALL  #
@@ -56,16 +54,6 @@ then
 
     restart-jupyter-server 
     sleep 10
-fi
-
-if [ "$AWS_SAGEMAKER_JUPYTERSERVER_IMAGE" = "jupyter-server" ]
-then
-    if [ $INSTALL_LAB1_EXTENSION -eq 1 ]
-    then
-        echo "Uninstalling JL1 extension..."
-        jupyter labextension uninstall $LAB_1_EXTENSION_NAME --no-build
-        jupyter lab build --debug --minimize=False
-    fi
-
-    nohup supervisorctl -c /etc/supervisor/conf.d/supervisord.conf restart jupyterlabserver
+else
+    echo "Only JupyterLab 3 is supported."
 fi

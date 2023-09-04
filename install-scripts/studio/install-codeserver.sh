@@ -22,8 +22,6 @@ EXTENSION_GALLERY_CONFIG='{{\"serviceUrl\":\"\",\"cacheUrl\":\"\",\"itemUrl\":\"
 LAUNCHER_ENTRY_TITLE='Code Server'
 PROXY_PATH='codeserver'
 LAB_3_EXTENSION_DOWNLOAD_URL='https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/sagemaker-jproxy-launcher-ext-0.1.3.tar.gz'
-INSTALL_LAB1_EXTENSION=1
-LAB_1_EXTENSION_DOWNLOAD_URL='https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amzn-sagemaker-jproxy-launcher-ext-jl1-0.1.4.tgz'
 
 #############
 #  INSTALL  #
@@ -130,30 +128,6 @@ then
     restart-jupyter-server
 
     sleep 10
-fi
-
-if [ "$AWS_SAGEMAKER_JUPYTERSERVER_IMAGE" = "jupyter-server" ]
-then
-    nohup supervisorctl -c /etc/supervisor/conf.d/supervisord.conf restart jupyterlabserver
-    
-    # Install JL1 extension
-    if [ $INSTALL_LAB1_EXTENSION -eq 1 ]
-    then
-        rm -f $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-        cat >>$CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh <<- JL1EXT
-sleep 15
-
-mkdir -p $CODE_SERVER_INSTALL_LOC/lab_ext
-curl -L $LAB_1_EXTENSION_DOWNLOAD_URL > $CODE_SERVER_INSTALL_LOC/lab_ext/amzn-sagemaker-jproxy-launcher-ext-jl1.tgz
-
-cd $CODE_SERVER_INSTALL_LOC/lab_ext
-jupyter labextension install amzn-sagemaker-jproxy-launcher-ext-jl1.tgz --no-build
-jlpm config set cache-folder /tmp/yarncache
-jupyter lab build --debug --minimize=False
-
-supervisorctl -c /etc/supervisor/conf.d/supervisord.conf restart jupyterlabserver
-JL1EXT
-        sudo chmod +x $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh
-        nohup $CODE_SERVER_INSTALL_LOC/install-jl1-extension.sh &
-    fi
+else
+    echo "JupyterLab extension is supported only for JupyterLab 3. You can still access code-server by typing the code-server URL in the browser address bar."
 fi
