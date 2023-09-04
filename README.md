@@ -6,7 +6,7 @@ A solution to install and run [code-server](https://github.com/coder/code-server
 
 ## Highlights
 
-This solution works for both [Amazon SageMaker Studio](https://docs.aws.amazon.com/sagemaker/latest/dg/studio.html) and [Amazon SageMaker Notebook Instances](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) configured to run with both JupyterLab 3 (recommended) and JupyterLab 1. For additional information on compatibility, please check the [compatiblity matrix](#compatibility).
+This solution works for both [Amazon SageMaker Studio](https://docs.aws.amazon.com/sagemaker/latest/dg/studio.html) and [Amazon SageMaker Notebook Instances](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) configured to run with both JupyterLab 3 (recommended) and JupyterLab 1 (with limitations). For additional information on compatibility, please check the [compatiblity matrix](#compatibility).
 
 ### Features - Amazon SageMaker Studio
 
@@ -63,8 +63,8 @@ When using Amazon SageMaker Studio, code-server must be installed on the instanc
 
 From a terminal appropriately configured with AWS CLI, run the following commands:
 	
-    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
-	tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.2.0/amazon-sagemaker-codeserver-0.2.0.tar.gz
+	tar -xvzf amazon-sagemaker-codeserver-0.2.0.tar.gz
 
     cd amazon-sagemaker-codeserver/install-scripts/studio
 
@@ -101,8 +101,8 @@ Amazon SageMaker Notebook Instances support lifecycle configuration scripts that
 
 From a terminal appropriately configured with AWS CLI, run the following commands:
 
-    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
-	tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+    curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.2.0/amazon-sagemaker-codeserver-0.2.0.tar.gz
+	tar -xvzf amazon-sagemaker-codeserver-0.2.0.tar.gz
 
     cd amazon-sagemaker-codeserver/install-scripts/notebook-instances
 
@@ -126,8 +126,8 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
 1. Open the Amazon SageMaker Studio system terminal
 2. From the terminal, run the following commands:
 
-        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
-		tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.2.0/amazon-sagemaker-codeserver-0.2.0.tar.gz
+		tar -xvzf amazon-sagemaker-codeserver-0.2.0.tar.gz
 
         cd amazon-sagemaker-codeserver/install-scripts/studio
         
@@ -145,8 +145,8 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
 1. Access JupyterLab and open a terminal
 2. From the terminal run the following commands:
 
-        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.1.5/amazon-sagemaker-codeserver-0.1.5.tar.gz
-        tar -xvzf amazon-sagemaker-codeserver-0.1.5.tar.gz
+        curl -LO https://github.com/aws-samples/amazon-sagemaker-codeserver/releases/download/v0.2.0/amazon-sagemaker-codeserver-0.2.0.tar.gz
+        tar -xvzf amazon-sagemaker-codeserver-0.2.0.tar.gz
 
         cd amazon-sagemaker-codeserver/install-scripts/notebook-instances
         
@@ -164,7 +164,7 @@ Make sure to replace <your_notebook_instance_name>, <your_instance_type> and <yo
 ## Advanced configuration
 The install scripts define the following variables that can be modified to customize the install procedure.
 
-- **CODE_SERVER_VERSION** - The version of code-server to install. The solution is tested with version 4.5.2. For a list of the available releases, please check https://github.com/coder/code-server/releases
+- **CODE_SERVER_VERSION** - The version of code-server to install. The solution is tested with version 4.16.1. For a list of the available releases, please check https://github.com/coder/code-server/releases
 - **CODE_SERVER_INSTALL_LOC** - The install location for code-server. For notebook instance setup, please make sure to choose a path on the attached EBS volume (under /home/ec2-user/SageMaker/).
 - **XDG_DATA_HOME** - The directory where user-specific code-server data is stored. 
 - **XDG_CONFIG_HOME** - The directory where user-specific code-server config is stored.
@@ -178,8 +178,6 @@ The install scripts define the following variables that can be modified to custo
 - **LAUNCHER_ENTRY_TITLE** - The label of the button added to the JupyterLab launcher. Defaults to 'Code Server'.
 - **PROXY_PATH** - The path that is appended to the Jupyter URI to access code-server. Defaults to 'codeserver'. Changing this value will cause the code-server icon not being used, and falling-back to a generic icon.
 - **LAB_3_EXTENSION_DOWNLOAD_URL** - The download URL of the JupyterLab 3 extension.
-- **INSTALL_LAB1_EXTENSION** - Set to 1 if the JupyterLab 1 extension must be installed, 0 otherwise.
-- **LAB_1_EXTENSION_DOWNLOAD_URL** - The download URL of the JupyterLab 1 extension.
 
 ## Architecture
 
@@ -196,10 +194,15 @@ The install scripts define the following variables that can be modified to custo
 
 ![Compatibility matrix](./images/compatibility.png)
 
-## Known limitations
+Please read the following section for the known limitations when using JupyterLab 1.
+
+## Caveats / known limitations
 
 - When using SageMaker Studio, code-server data and configuration are stored in non-persistent volumes. As a consequence, when deleting and re-creating a JupyterServer app for a specific user, the install procedure has to be executed again (either automatically with lifecycle configurations, or manually). Please also note that user-specified code-server settings, user-installed extensions, etc. will be lost and will need to be set/installed again. The same considerations apply to the Conda environment. This behavior can be modified by changing the _XDG_DATA_HOME_, _XDG_CONFIG_HOME_ or _CONDA_ENV_LOCATION_ to use the persistent Amazon EFS volume (mounted on /home/sagemaker-user/) based on needs.
-- When running JupyterLab 1 in SageMaker Studio, the JupyterLab extension that adds the code-server button to the launcher is installed in background, to allow the install procedure to complete in the maximum time allowed for lifecycle configurations to complete (5 minutes). As a consequence, the Studio Jupyter Server will be operational even before the install procedure is fully executed, but please expect a restart of the Jupyter server at the end of the background task (within 5-6 minutes). When using lifecycle configurations, you can monitor the full install process from CloudWatch Logs; when using the manual install procedure, please check the logs in the _nohup.out_ file.
+- When using rootless mode in SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-root-access.html), you will need to manually shutdown the JupyterServer at the end of the install procedure, by opening the File menu and clicking on Shut Down.
+- Starting from release 0.2.0 the JupyterLab 1 extension that shows the button to launch code-server in either Studio or Notebook Instances is not supported anymore. However, JupyterLab 1 users can still install this solution and access code-server by typing the following URLs in the browser (and replacing the <placeholders> in the URLs):
+  - For SageMaker Notebook Instances: https://\<notebook_instance_name\>.notebook.\<region\>.sagemaker.aws/codeserver/
+  - For SageMaker Studio: https://\<domain_id\>.studio.\<region\>.sagemaker.aws/jupyter/default/codeserver/
 
 ## License
 

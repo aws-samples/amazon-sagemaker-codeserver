@@ -1,6 +1,6 @@
 {
   "name": "@amzn/sagemaker-jproxy-launcher-ext",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "JupyterLab extension for proxy services.",
   "keywords": [
     "jupyter",
@@ -79,7 +79,7 @@
     "extension": true,
     "outputDir": "sagemaker_jproxy_launcher_ext/labextension",
     "_build": {
-      "load": "static/remoteEntry.a49dcdf7507b0f64a98d.js",
+      "load": "static/remoteEntry.0f024b114169ce19fce1.js",
       "extension": "./extension",
       "style": "./style"
     }
